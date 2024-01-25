@@ -35,7 +35,7 @@ export class UsersService {
         delete user.salt;
         return user;
       } catch (error) {
-        if (error.code.toString() === '23505') {
+        if (error.code?.toString() === '23505') {
           throw new ConflictException('Endereço de email já está em uso');
         } else {
           throw new InternalServerErrorException(

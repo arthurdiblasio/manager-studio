@@ -6,7 +6,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
@@ -35,7 +34,12 @@ export class User extends BaseEntity {
   @Column({ nullable: false })
   salt: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 64 })
+  @Column({
+    name: 'confirmation_token',
+    nullable: true,
+    type: 'varchar',
+    length: 64,
+  })
   confirmationToken: string;
 
   @Column({
@@ -51,11 +55,6 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @BeforeInsert()
-  hashPassword() {
-    this.password = bcrypt.hash(this.password, this.salt);
-  }
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
