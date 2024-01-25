@@ -9,6 +9,7 @@ import { UserRole } from './enums/user-roles.enum';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { CredentialsDto } from 'src/auth/dtos/credentials.dto';
 
 @Injectable()
 export class UsersService {
@@ -46,5 +47,16 @@ export class UsersService {
   }
   private async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
+  }
+
+  async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
+    const { email, password } = credentialsDto;
+    const user = await User.findOne({ where: { email, status: true } });
+
+    if (user && (await user.checkPassword(password))) {
+      return user;
+    } else {
+      return null;
+    }
   }
 }
