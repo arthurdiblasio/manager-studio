@@ -30,6 +30,8 @@
 
 ```bash
 $ npm install
+
+$ docker compse up -d
 ```
 
 ## Running the app
